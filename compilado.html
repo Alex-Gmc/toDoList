@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lista de tarefas</title>
+    <style>
+        *{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+body{
+    background: #777;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* font-family:'Times New Roman', Times, serif; */
+}
+h1{
+    text-align: center;
+    margin: 30px 0 50px 0;
+    font-weight: 100;
+    font-size: 3vw;
+}
+.lista{
+    background: purple;
+    width: 70%;
+    border-radius: 10px 10px 0 0;
+    padding: 20px;
+    margin: 0;
+    font-size: 2vw;
+    word-wrap:break-word;
+}
+.tarefa {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    cursor: default;
+    word-wrap:break-word;
+    word-break: break-all;
+}
+.grupo {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.tarefa:hover{
+    background: rgba(61, 3, 61, 0.388);
+}
+button{
+    display: flex;
+    align-self: center;
+    width: 1.5VW;
+    height: 1.5VW;
+    border-radius: 50%;
+    background: #f00;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+.info{
+    width: 70%;
+    padding: 20px;
+    border-radius: 0 0 10px 10px;
+    border: none;
+    margin-top: 0;
+    font-size: 2.2vw;
+    /* font-family:'Times New Roman', Times, serif; */
+}
+input:hover{
+    background: rgb(233, 233, 233);
+}
+
+.btnCheck {
+    background: rgb(241, 241, 1);
+    margin-right: 0.5vw;
+}
+
+.btnGreen {
+    background-color: rgb(27, 218, 27);
+}
+
+.riscado {
+    text-decoration: line-through;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.238);
+}
+    </style>
+</head>
+<body>
+    <h1>Lista de tarefas</h1>
+    <div class="lista"></div>
+    <input class="info" type="text" placeholder="Digite aqui sua tarefa, e presione ENTER para salva-la...">
+
+    <script>
+        var lista = document.querySelector('.lista');
+var apagar;
+
+lista.innerHTML = localStorage.getItem('dados');
+
+adicionarEventos();
+
+
+var info = document.querySelector('.info');
+
+function adicionarTarefa(){
+    
+    lista.innerHTML += '<div class="tarefa"><div class="grupo"><button class="btnCheck"></button><span>'+info.value+'</span></div><button class="btn"></button></div>';
+    
+    apagar = document.querySelectorAll('button');
+    
+    info.value = null;
+    
+    adicionarEventos();
+    
+    salvarDados();
+
+}
+
+
+function excluirTarefa(e){
+    e.target.parentNode.remove();
+    salvarDados();
+}
+
+function digitar(e){
+    if(e.keyCode==13){
+        adicionarTarefa();
+    }
+};
+
+function riscar(e){
+    e.target.classList.toggle("btnGreen");
+    e.target.parentNode.children[1].classList.toggle("riscado");
+    salvarDados();
+}
+
+function escolherFuncao(e){
+    e.target.className === 'btn' ? excluirTarefa(e) : riscar(e);
+}
+
+info.addEventListener('keydown', digitar);
+
+
+const salvarDados = () => localStorage.setItem('dados', lista.innerHTML);
+
+function adicionarEventos(){
+    apagar = document.querySelectorAll('button');
+
+    for(var i=0;i<apagar.length;i++){
+        apagar[i].addEventListener('click',escolherFuncao)
+    };
+}
+    </script>
+</body>
+</html>
